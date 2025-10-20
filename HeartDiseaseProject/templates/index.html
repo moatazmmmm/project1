@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Heart Disease Prediction</title>
+  <style>
+    body {
+      background: #f7f7f7;
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 20px;
+    }
+    .container {
+      background: #fff;
+      width: 400px;
+      margin: 40px auto;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+    h2 {
+      text-align: center;
+      color: #333;
+    }
+    form {
+      display: flex;
+      flex-direction: column;
+    }
+    label {
+      margin-top: 10px;
+      font-weight: bold;
+    }
+    input {
+      padding: 8px;
+      margin-top: 4px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+    }
+    button {
+      margin-top: 20px;
+      padding: 10px;
+      background-color: #0078d7;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #005fa3;
+    }
+    .result {
+      margin-top: 20px;
+      font-weight: bold;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Heart Disease Prediction</h2>
+    <form id="predictForm">
+      <label>Age:</label><input type="number" id="age" required>
+      <label>Sex (1=Male, 0=Female):</label><input type="number" id="sex" required>
+      <label>Chest Pain Type (0-3):</label><input type="number" id="cp" required>
+      <label>Resting BP:</label><input type="number" id="trestbps" required>
+      <label>Cholesterol:</label><input type="number" id="chol" required>
+      <label>Fasting Blood Sugar (0/1):</label><input type="number" id="fbs" required>
+      <label>Rest ECG (0-2):</label><input type="number" id="restecg" required>
+      <label>Max Heart Rate:</label><input type="number" id="thalach" required>
+      <label>Exercise Angina (0/1):</label><input type="number" id="exang" required>
+      <label>Oldpeak:</label><input type="number" step="any" id="oldpeak" required>
+      <label>Slope (0-2):</label><input type="number" id="slope" required>
+      <label>CA (0-4):</label><input type="number" id="ca" required>
+      <label>Thal (0-3):</label><input type="number" id="thal" required>
+      <button type="submit">Predict</button>
+    </form>
+    <div class="result" id="result"></div>
+  </div>
+
+  <script>
+    const form = document.getElementById('predictForm');
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const data = {
+        age: parseInt(document.getElementById('age').value),
+        sex: parseInt(document.getElementById('sex').value),
+        cp: parseInt(document.getElementById('cp').value),
+        trestbps: parseInt(document.getElementById('trestbps').value),
+        chol: parseInt(document.getElementById('chol').value),
+        fbs: parseInt(document.getElementById('fbs').value),
+        restecg: parseInt(document.getElementById('restecg').value),
+        thalach: parseInt(document.getElementById('thalach').value),
+        exang: parseInt(document.getElementById('exang').value),
+        oldpeak: parseFloat(document.getElementById('oldpeak').value),
+        slope: parseInt(document.getElementById('slope').value),
+        ca: parseInt(document.getElementById('ca').value),
+        thal: parseInt(document.getElementById('thal').value)
+      };
+
+      const res = await fetch("/predict", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify(data)
+      });
+
+      const result = await res.json();
+      document.getElementById('result').textContent =
+        "Result: " + result.prediction;
+    });
+  </script>
+</body>
+</html>
